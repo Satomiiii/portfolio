@@ -9,19 +9,13 @@
       </h1>
 
       <p class="hero-lead">
-        料理は繰り返しで上達するもの。<br>
         作った日・回数・反省点・次回の工夫を記録して、<br>
-        あなた好みの加減を見つけていきましょう。
+        あなた好みの味付けや火加減を見つけていきましょう。
       </p>
 
       <div class="hero-actions">
-        <%= link_to "新規登録（準備中）", "#",
-              class: "btn primary is-disabled",
-              aria: { disabled: true } %>
-
-        <%= link_to "ログイン（準備中）", "#",
-              class: "btn ghost is-disabled",
-              aria: { disabled: true } %>
+        <%= link_to "料理一覧へ", dishes_path, class: "btn primary" %>
+        <%= link_to "料理を登録する", new_dish_path, class: "btn ghost" %>
       </div>
 
       <ul class="hero-points">

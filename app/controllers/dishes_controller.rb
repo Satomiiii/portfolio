@@ -1,21 +1,8 @@
 class DishesController < ApplicationController
-  # skip_before_action :authenticate_user!, raise: false
+  before_action :set_dish, only: [ :edit, :update, :destroy ]
 
   def index
-    @q = params[:q].to_s.strip
-    @category = params[:category].to_s.strip
-
-    @dishes = Dish.all.order(created_at: :desc)
-
-    if @q.present?
-      @dishes = @dishes.where("name LIKE ?", "%#{@q}%")
-    end
-
-    if @category.present?
-      @dishes = @dishes.where(category: @category)
-    end
-
-    @categories = Dish.distinct.order(:category).pluck(:category)
+    @dishes = Dish.order(created_at: :desc)
   end
 
   def new
@@ -24,16 +11,34 @@ class DishesController < ApplicationController
 
   def create
     @dish = Dish.new(dish_params)
-
     if @dish.save
       redirect_to dishes_path, notice: "料理を登録しました"
     else
-      flash.now[:alert] = "入力内容を確認してください"
       render :new
     end
   end
 
+  def edit
+  end
+
+  def update
+    if @dish.update(dish_params)
+      redirect_to dishes_path, notice: "料理を更新しました"
+    else
+      render :edit
+    end
+  end
+
+  def destroy
+    @dish.destroy
+    redirect_to dishes_path, notice: "料理を削除しました"
+  end
+
   private
+
+  def set_dish
+    @dish = Dish.find(params[:id])
+  end
 
   def dish_params
     params.require(:dish).permit(:name, :category, :memo)

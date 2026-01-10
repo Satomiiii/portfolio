@@ -255,3 +255,28 @@ body{
   .search-form{ grid-template-columns: 1fr; }
   .page-header{ flex-direction: column; align-items: flex-start; }
 }
+
+.dish-actions{
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.btn.small{
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.btn.danger{
+  border-color: rgba(198,91,91,0.35);
+  background: rgba(198,91,91,0.10);
+  color: #8a2f2f;
+}
+.btn.danger:hover{
+  background: rgba(198,91,91,0.16);
+}
+
+
+.inline-form { display: inline; }

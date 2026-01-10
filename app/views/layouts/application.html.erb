@@ -3,10 +3,14 @@
   <head>
     <title>CookLog</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", media: "all" %>
+
+    <!-- ✅ これを追加：Turbo / Stimulus を動かすため -->
+    <%= javascript_importmap_tags %>
   </head>
 
   <body>
@@ -20,12 +24,15 @@
         </div>
 
         <nav class="nav">
+          <%= link_to "料理一覧", dishes_path, class: "nav-link" %>
+          <%= link_to "料理登録", new_dish_path, class: "nav-link" %>
+
           <!-- Devise未実装のため仮リンク -->
-          <%= link_to "ログイン", "#",
+          <%= link_to "ログイン（仮）", "#",
                 class: "nav-link is-disabled",
                 aria: { disabled: true } %>
 
-          <%= link_to "新規登録", "#",
+          <%= link_to "新規登録（仮）", "#",
                 class: "nav-link primary is-disabled",
                 aria: { disabled: true } %>
         </nav>
@@ -33,6 +40,15 @@
     </header>
 
     <main class="site-main">
+      <div class="container">
+        <% if notice.present? %>
+          <div class="flash notice"><%= notice %></div>
+        <% end %>
+        <% if alert.present? %>
+          <div class="flash alert"><%= alert %></div>
+        <% end %>
+      </div>
+
       <%= yield %>
     </main>
 

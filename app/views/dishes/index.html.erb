@@ -1,62 +1,33 @@
-<div class="container page">
-  <div class="page-header">
-    <div>
-      <h1 class="page-title">登録料理一覧</h1>
-      <p class="page-subtitle">料理を登録して、あとでログ（試行）を追加していきます。</p>
-    </div>
+<h1>登録料理一覧</h1>
 
-    <div class="page-actions">
-      <%= link_to "料理を登録する", new_dish_path, class: "btn primary" %>
-    </div>
-  </div>
+<div class="actions">
+  <%= link_to "料理を登録する", new_dish_path, class: "btn primary" %>
+</div>
 
-  <div class="card search-card">
-    <%= form_with url: dishes_path, method: :get, local: true, class: "search-form" do %>
-      <div class="field">
-        <label class="label">料理名検索</label>
-        <%= text_field_tag :q, params[:q], class: "input", placeholder: "例：ハンバーグ / 味噌汁" %>
+<div class="dish-grid">
+  <% @dishes.each do |dish| %>
+    <div class="dish-card">
+      <div class="dish-header">
+        <h3><%= dish.name %></h3>
+        <span class="category"><%= dish.category %></span>
       </div>
 
-      <div class="field">
-        <label class="label">カテゴリ</label>
-        <%= select_tag :category,
-              options_for_select([["すべて", ""]] + @categories.map { |c| [c, c] }, params[:category]),
-              class: "select" %>
+      <p class="memo"><%= dish.memo.presence || "メモは未登録です" %></p>
+
+      <p class="date">
+        登録日：<%= dish.created_at.strftime("%Y/%m/%d") %>
+      </p>
+
+      <div class="dish-actions">
+        <%= link_to "編集", edit_dish_path(dish), class: "btn ghost" %>
+
+        <%= button_to "削除",
+              dish_path(dish),
+              method: :delete,
+              data: { turbo_confirm: "本当に削除しますか？" },
+              class: "btn danger",
+              form_class: "inline-form" %>
       </div>
-
-      <div class="field field-actions">
-        <%= submit_tag "検索", class: "btn" %>
-        <%= link_to "クリア", dishes_path, class: "btn ghost" %>
-      </div>
-    <% end %>
-  </div>
-
-  <% if @dishes.any? %>
-    <div class="grid">
-      <% @dishes.each do |dish| %>
-        <div class="dish-card">
-          <div class="dish-card-header">
-            <div class="dish-name"><%= dish.name %></div>
-            <div class="chip"><%= dish.category %></div>
-          </div>
-
-          <% if dish.memo.present? %>
-            <div class="dish-memo"><%= simple_format(h(dish.memo)) %></div>
-          <% else %>
-            <div class="dish-memo muted">メモは未登録です</div>
-          <% end %>
-
-          <div class="dish-meta">
-            登録日：<%= dish.created_at.strftime("%Y/%m/%d") %>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  <% else %>
-    <div class="empty">
-      <p class="empty-title">まだ料理が登録されていません</p>
-      <p class="empty-text">まずは1つ登録してみましょう。</p>
-      <%= link_to "料理を登録する", new_dish_path, class: "btn primary" %>
     </div>
   <% end %>
 </div>

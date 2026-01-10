@@ -1,8 +1,12 @@
 class DishesController < ApplicationController
-  before_action :set_dish, only: [ :edit, :update, :destroy ]
+  before_action :set_dish, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @dishes = Dish.order(created_at: :desc)
+  end
+
+  def show
+    @cook_logs = @dish.cook_logs.order(trial_number: :desc, created_at: :desc)
   end
 
   def new
@@ -14,7 +18,8 @@ class DishesController < ApplicationController
     if @dish.save
       redirect_to dishes_path, notice: "料理を登録しました"
     else
-      render :new
+      flash.now[:alert] = "入力内容を確認してください"
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -25,7 +30,8 @@ class DishesController < ApplicationController
     if @dish.update(dish_params)
       redirect_to dishes_path, notice: "料理を更新しました"
     else
-      render :edit
+      flash.now[:alert] = "入力内容を確認してください"
+      render :edit, status: :unprocessable_entity
     end
   end
 

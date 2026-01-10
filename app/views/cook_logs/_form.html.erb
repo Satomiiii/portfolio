@@ -1,0 +1,31 @@
+<%= form_with model: [@dish, @cook_log], local: true do |f| %>
+  <% if @cook_log.errors.any? %>
+    <div class="flash alert">
+      <ul>
+        <% @cook_log.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :trial_number, "回数" %><br>
+    <%= f.number_field :trial_number, min: 1 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :reflection, "反省点" %><br>
+    <%= f.text_area :reflection, rows: 4 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :next_plan, "次回" %><br>
+    <%= f.text_area :next_plan, rows: 4 %>
+  </div>
+
+  <div class="dish-actions">
+    <%= f.submit class: "btn primary" %>
+    <%= link_to "戻る", dish_path(@dish), class: "btn" %>
+  </div>
+<% end %>

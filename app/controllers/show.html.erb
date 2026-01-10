@@ -1,0 +1,26 @@
+<h1>料理詳細</h1>
+
+<div class="dish-card">
+  <div class="dish-header">
+    <h3><%= @dish.name %></h3>
+    <span class="category"><%= @dish.category %></span>
+  </div>
+
+  <p class="memo">
+    <%= @dish.memo.presence || "メモは未登録です" %>
+  </p>
+
+  <p class="date">
+    登録日：<%= @dish.created_at.strftime("%Y/%m/%d") %>
+  </p>
+
+  <div class="dish-actions">
+    <%= link_to "編集", edit_dish_path(@dish), class: "btn ghost" %>
+
+    <%= link_to "削除", dish_path(@dish),
+      data: { turbo_method: :delete, turbo_confirm: "本当に削除しますか？" },
+      class: "btn danger" %>
+
+    <%= link_to "一覧へ戻る", dishes_path, class: "btn" %>
+  </div>
+</div>

@@ -8,7 +8,7 @@
   <% @dishes.each do |dish| %>
     <div class="dish-card">
       <div class="dish-header">
-        <h3><%= dish.name %></h3>
+        <h3><%= link_to dish.name, dish_path(dish) %></h3>
         <span class="category"><%= dish.category %></span>
       </div>
 
@@ -31,3 +31,8 @@
     </div>
   <% end %>
 </div>
+
+
+
+
+

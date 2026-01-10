@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  dish: one
+  trial_number: 1
+  reflection: MyText
+  next_plan: MyText
+
+two:
+  dish: two
+  trial_number: 1
+  reflection: MyText
+  next_plan: MyText

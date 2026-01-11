@@ -2,7 +2,11 @@ class DishesController < ApplicationController
   before_action :set_dish, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @dishes = Dish.order(created_at: :desc)
+    @dishes =
+      Dish.left_joins(:cook_logs)
+          .select("dishes.*, COUNT(cook_logs.id) AS cook_logs_count")
+          .group("dishes.id")
+          .order(created_at: :desc)
   end
 
   def show

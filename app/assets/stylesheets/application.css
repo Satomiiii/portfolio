@@ -280,3 +280,9 @@ body{
 
 
 .inline-form { display: inline; }
+
+.trial-count {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #666;
+}

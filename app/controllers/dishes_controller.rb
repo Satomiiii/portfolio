@@ -4,7 +4,7 @@ class DishesController < ApplicationController
   def index
     @dishes =
       Dish.left_joins(:cook_logs)
-          .select("dishes.*, COUNT(cook_logs.id) AS cook_logs_count")
+          .select("dishes.*, COUNT(cook_logs.id) AS cook_logs_count, MAX(cook_logs.created_at) AS last_cooked_at")
           .group("dishes.id")
           .order(created_at: :desc)
   end

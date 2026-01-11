@@ -8,7 +8,6 @@
   <% @dishes.each do |dish| %>
     <div class="dish-card">
       <div class="dish-header">
-        
         <h3>
           <%= link_to dish.name, dish_path(dish), class: "dish-title-link" %>
         </h3>
@@ -18,9 +17,17 @@
 
       <p class="memo"><%= dish.memo.presence || "メモは未登録です" %></p>
 
-      
       <p class="trial-count">
-        試行回数：<%= (dish.try(:cook_logs_count) || dish.cook_logs.size).to_i %>回
+        試行回数：<%= dish.try(:cook_logs_count).to_i %>回
+      </p>
+
+      <p class="last-cooked">
+        最終試行日：
+        <% if dish.try(:last_cooked_at).present? %>
+          <%= Time.zone.parse(dish.last_cooked_at.to_s).strftime("%Y/%m/%d") %>
+        <% else %>
+          なし
+        <% end %>
       </p>
 
       <p class="date">
@@ -28,11 +35,8 @@
       </p>
 
       <div class="dish-actions">
-        
         <%= link_to "詳細（ログ）", dish_path(dish), class: "btn primary" %>
-
         <%= link_to "編集", edit_dish_path(dish), class: "btn ghost" %>
-
         <%= link_to "削除", dish_path(dish),
               data: { turbo_method: :delete, turbo_confirm: "本当に削除しますか？" },
               class: "btn danger" %>

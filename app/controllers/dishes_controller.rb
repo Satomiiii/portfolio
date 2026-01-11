@@ -6,7 +6,7 @@ class DishesController < ApplicationController
       Dish.left_joins(:cook_logs)
           .select("dishes.*, COUNT(cook_logs.id) AS cook_logs_count, MAX(cook_logs.created_at) AS last_cooked_at")
           .group("dishes.id")
-          .order(created_at: :desc)
+          .order(Arel.sql("last_cooked_at IS NULL ASC, last_cooked_at DESC, dishes.created_at DESC"))
   end
 
   def show

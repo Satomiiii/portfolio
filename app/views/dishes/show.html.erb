@@ -19,9 +19,11 @@
     <%= link_to "編集", edit_dish_path(@dish), class: "btn ghost" %>
     <%= link_to "一覧へ戻る", dishes_path, class: "btn" %>
 
-    <%= link_to "料理を削除", dish_path(@dish),
-      data: { turbo_method: :delete, turbo_confirm: "料理ごと削除します。本当に削除しますか？" },
-      class: "btn danger" %>
+    <%= button_to "料理を削除",
+                  dish_path(@dish),
+                  method: :delete,
+                  form: { data: { turbo_confirm: "料理ごと削除します。本当に削除しますか？" } },
+                  class: "btn danger" %>
   </div>
 </div>
 
@@ -34,17 +36,22 @@
     <% @cook_logs.each do |log| %>
       <div class="log-card">
         <div class="log-header">
-          <strong><%= "第#{log.trial_number}回" %></strong>
+          <strong>第<%= log.trial_number %>回</strong>
         </div>
 
         <p><strong>反省点：</strong><%= log.reflection %></p>
         <p><strong>次回：</strong><%= log.next_plan %></p>
 
         <div class="dish-actions">
-          <%= link_to "編集", edit_dish_cook_log_path(@dish, log), class: "btn ghost" %>
-          <%= link_to "削除", dish_cook_log_path(@dish, log),
-            data: { turbo_method: :delete, turbo_confirm: "このログを削除しますか？" },
-            class: "btn danger" %>
+          <%= link_to "編集",
+                      edit_dish_cook_log_path(@dish, log),
+                      class: "btn ghost" %>
+
+          <%= button_to "削除",
+                        dish_cook_log_path(@dish, log),
+                        method: :delete,
+                        form: { data: { turbo_confirm: "このログを削除しますか？" } },
+                        class: "btn danger" %>
         </div>
       </div>
     <% end %>

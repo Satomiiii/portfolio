@@ -17,22 +17,28 @@
 
       <p class="memo"><%= dish.memo.presence || "メモは未登録です" %></p>
 
-      <p class="trial-count">
-        試行回数：<%= dish.try(:cook_logs_count).to_i %>回
-      </p>
-
-      <p class="last-cooked">
-        最終試行日：
-        <% if dish.try(:last_cooked_at).present? %>
-          <%= Time.zone.parse(dish.last_cooked_at.to_s).strftime("%Y/%m/%d") %>
-        <% else %>
-          なし
-        <% end %>
-      </p>
-
       <p class="date">
-        登録日：<%= dish.created_at.strftime("%Y/%m/%d") %>
+        登録日： <%= dish.created_at.strftime("%Y/%m/%d") %>
       </p>
+
+      <p class="trial-count">
+        試行回数：
+        <%= dish.respond_to?(:cook_logs_count) ? dish.cook_logs_count : dish.cook_logs.size %>回
+      </p>
+
+      <% if dish.respond_to?(:last_cooked_at) && dish.last_cooked_at.present? %>
+        <% last = dish.last_cooked_at %>
+        <% last = Time.zone.parse(last) if last.is_a?(String) %>
+        <p class="last-cooked">
+          最終試行日： <%= last.strftime("%Y/%m/%d") %>
+        </p>
+      <% end %>
+
+      <% if dish.respond_to?(:latest_next_plan) && dish.latest_next_plan.present? %>
+        <p class="next-plan">
+          <strong>次回：</strong><%= dish.latest_next_plan %>
+        </p>
+      <% end %>
 
       <div class="dish-actions">
         <%= link_to "詳細（ログ）", dish_path(dish), class: "btn primary" %>

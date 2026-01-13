@@ -1,4 +1,5 @@
 class CookLogsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_dish
   before_action :set_cook_log, only: [ :edit, :update, :destroy ]
 
@@ -8,6 +9,8 @@ class CookLogsController < ApplicationController
 
   def create
     @cook_log = @dish.cook_logs.new(cook_log_params)
+    @cook_log.user = current_user
+
     if @cook_log.save
       redirect_to dish_path(@dish), notice: "ログを追加しました"
     else
@@ -36,7 +39,7 @@ class CookLogsController < ApplicationController
   private
 
   def set_dish
-    @dish = Dish.find(params[:dish_id])
+    @dish = current_user.dishes.find(params[:dish_id])
   end
 
   def set_cook_log

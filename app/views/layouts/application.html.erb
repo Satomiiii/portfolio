@@ -8,8 +8,6 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", media: "all" %>
-
-    <!-- ✅ これを追加：Turbo / Stimulus を動かすため -->
     <%= javascript_importmap_tags %>
   </head>
 
@@ -24,17 +22,27 @@
         </div>
 
         <nav class="nav">
-          <%= link_to "料理一覧", dishes_path, class: "nav-link" %>
-          <%= link_to "料理登録", new_dish_path, class: "nav-link" %>
+          <% if user_signed_in? %>
 
-          <!-- Devise未実装のため仮リンク -->
-          <%= link_to "ログイン（仮）", "#",
-                class: "nav-link is-disabled",
-                aria: { disabled: true } %>
+            
+            <span class="nav-user-email">
+              <%= current_user.email %>
+            </span>
 
-          <%= link_to "新規登録（仮）", "#",
-                class: "nav-link primary is-disabled",
-                aria: { disabled: true } %>
+            <%= link_to "料理一覧", dishes_path, class: "nav-link" %>
+            <%= link_to "料理登録", new_dish_path, class: "nav-link" %>
+
+            <%= button_to "ログアウト",
+                          destroy_user_session_path,
+                          method: :delete,
+                          form: { class: "nav-form" },
+                          class: "nav-link",
+                          data: { turbo_confirm: "ログアウトしますか？" } %>
+
+          <% else %>
+            <%= link_to "ログイン", new_user_session_path, class: "nav-link" %>
+            <%= link_to "新規登録", new_user_registration_path, class: "nav-link primary" %>
+          <% end %>
         </nav>
       </div>
     </header>
@@ -44,6 +52,7 @@
         <% if notice.present? %>
           <div class="flash notice"><%= notice %></div>
         <% end %>
+
         <% if alert.present? %>
           <div class="flash alert"><%= alert %></div>
         <% end %>

@@ -1,12 +1,26 @@
 class DishesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_dish, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @dishes =
-      Dish.left_joins(:cook_logs)
-          .select("dishes.*, COUNT(cook_logs.id) AS cook_logs_count, MAX(cook_logs.created_at) AS last_cooked_at")
-          .group("dishes.id")
-          .order(Arel.sql("last_cooked_at IS NULL ASC, last_cooked_at DESC, dishes.created_at DESC"))
+      current_user
+        .dishes
+        .left_joins(:cook_logs)
+        .select(<<~SQL)
+          dishes.*,
+          COUNT(cook_logs.id) AS cook_logs_count,
+          MAX(cook_logs.created_at) AS last_cooked_at,
+          (
+            SELECT cook_logs.next_plan
+            FROM cook_logs
+            WHERE cook_logs.dish_id = dishes.id
+            ORDER BY cook_logs.created_at DESC
+            LIMIT 1
+          ) AS latest_next_plan
+        SQL
+        .group("dishes.id")
+        .order(Arel.sql("last_cooked_at IS NULL ASC, last_cooked_at DESC, dishes.created_at DESC"))
   end
 
   def show
@@ -14,11 +28,12 @@ class DishesController < ApplicationController
   end
 
   def new
-    @dish = Dish.new
+    @dish = current_user.dishes.new
   end
 
   def create
-    @dish = Dish.new(dish_params)
+    @dish = current_user.dishes.new(dish_params)
+
     if @dish.save
       redirect_to dishes_path, notice: "料理を登録しました"
     else
@@ -47,7 +62,7 @@ class DishesController < ApplicationController
   private
 
   def set_dish
-    @dish = Dish.find(params[:id])
+    @dish = current_user.dishes.find(params[:id])
   end
 
   def dish_params
